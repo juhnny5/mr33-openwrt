@@ -20,7 +20,7 @@ pip2 --version
 Install *pyserial* for `ubootwrite.py` script :
 
 ```bash
-pip2 install pyserial
+pip2 install serial
 ```
 
 ## Via Docker

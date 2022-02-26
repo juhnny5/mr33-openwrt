@@ -2,7 +2,9 @@
 
 You can find the associated article [here](https://blog.jbriault.fr/installer-openwrt-sur-cisco-meraki-mr33/) (in French).
 
-## Install the prerequisites
+## From scratch
+
+### Install the prerequisites
 
 If you have a RaspberryPI with the latest OS version, you will have to install `pip2` manually as it is no longer present in the repositories.
 
@@ -21,6 +23,18 @@ Install *pyserial* for `ubootwrite.py` script :
 pip2 install pyserial
 ```
 
+## Via Docker
+
+To launch the container build, not to be bothered with Python libs.
+
+```bash
+cd ubootwrite/
+sudo docker build -t  ubootwrite .
+
+# Check
+sudo docker run -it ubootwrite --version
+```
+
 ## Upload uboot to MR33
 
 To do this nothing very complicated, you must use the following commands:
@@ -29,6 +43,9 @@ To do this nothing very complicated, you must use the following commands:
 cd mr33-openwrt/ubootwrite
 chmod a+x ubootwrite.py
 ./ubootwrite.py --write=mr33-uboot.bin --serial=/dev/ttyS0
+
+# Same with Docker
+sudo docker run -it ubootwrite --write=mr33-uboot.bin --serial=/dev/ttyS0
 ```
 
 ## Upload initramfs image to MR33

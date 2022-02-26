@@ -46,3 +46,43 @@ All you have to do is connect via SSH to confirm that OpenWRT is present. Be car
 ssh root@192.168.1.1
 root@OpenWrt:~#
 ```
+
+## Plan a rollback
+
+Since we have not yet made a backup of the OS already present, and we have not overwritten the NVRAM, we need to do so to be able to back up if this is the case.
+
+To do this, use the following commands:
+
+```bash
+file="openwrt-ipq40xx-meraki_mr33-initramfs-fit-uImage.itb"
+size=$(cat "$file" | wc -c)
+ubirename /dev/ubi0 part.old part.meraki.old
+ubimkvol /dev/ubi0 --size=$size --type=static 
+--name=part.old
+
+Volume ID 99, size 49 LEBs (6221824 bytes, 5.9 MiB), LEB size 126976 bytes (124.0 KiB), static, name
+"part.old", alignment 1
+Ubimkvol generates a new Volume ID (marked in red). This ID is used for the next command so please
+replace the 99 with the correct value.
+
+ubiupdatevol /dev/ubi0_99 "$file"
+```
+
+Note that `/dev/ubi0_99` corresponds to `Volume ID 99` above, so this number may change depending on the case. 
+
+## Install OpenWRT forever
+
+Now that we have prepared a backtrack, we will be able to install OpenWRT, for that we have to copy the file `openwrt-ipq40xx-meraki_mr33-squashfs-sysupgrade.bin` on our machine with the command:
+
+```bash
+scp openwrt-ipq40xx-meraki_mr33-squashfs-sysupgrade.bin root@192.168.1.1:/root/
+```
+
+It will remain on the machine to use the commands:
+
+```bash
+ubirename /dev/ubi0 part.safe part.meraki
+sysupgrade -v openwrt-ipq40xx-meraki_mr33-squashfs-sysupgrade.bin
+```
+
+Once this is done, the terminal will reboot again, and you can then connect to the OpenWRT web interface (via http://192.168.1.1).

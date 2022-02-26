@@ -86,3 +86,16 @@ sysupgrade -v openwrt-ipq40xx-meraki_mr33-squashfs-sysupgrade.bin
 ```
 
 Once this is done, the terminal will reboot again, and you can then connect to the OpenWRT web interface (via http://192.168.1.1).
+
+## Restore the original firmware
+
+To restore the original firmware, use the following commands:
+
+```bash
+ubirename /dev/ubi0 part.safe part.openwrt part.old part.fallback
+ubirename /dev/ubi0 part.meraki part.safe part.meraki.old part.old
+
+# Remove OpenWRT partitions
+ubirmvol /dev/ubi0 --name=rootfs
+ubirmvol /dev/ubi0 --name=rootfs_data
+```

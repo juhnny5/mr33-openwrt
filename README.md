@@ -1,5 +1,7 @@
 # OpenWRT on Cisco Meraki MR33
 
+You can find the associated article [here](https://blog.jbriault.fr/installer-openwrt-sur-cisco-meraki-mr33/) (in French).
+
 ## Install the prerequisites
 
 If you have a RaspberryPI with the latest OS version, you will have to install `pip2` manually as it is no longer present in the repositories.
